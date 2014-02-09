@@ -1,0 +1,30 @@
+NAME   
+       randomips - generate random IP addresses
+
+SYNOPSIS
+       randomips [-b BASENAME] [-s NUM] NUMIPS
+
+DESCRIPTION
+       randomips generates NUMIPS random IPv4 addresses and outputs them to
+       STDOUT or to a number of files if you specify a basename for
+       the files. The generated IP addresses are not unique and do
+       not take into account any IANA rules for IP address space.
+
+OPTIONS
+       -b BASENAME
+          Output will be put into files basename[.NUM] where NUM
+          is the part number if you split the generated list into
+          several parts. If -s is not specified, the list will be
+          saved to BASENAME.
+
+       -h 
+          Displays this help
+
+       -s NUM
+          Split the list into NUM parts. The last part will be smaller
+          than the preceding parts if NUMIPS modulo NUM is non-zero..
+
+BUGS
+       Email bug-reports to paul [AT] spurious [DOT] biz. Be sure to
+       include the word "randomips" somewhere in the "Subject:" field.
+

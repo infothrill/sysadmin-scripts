@@ -1,0 +1,41 @@
+OVERVIEW
+
+sql2data is a tinydns administration tool written in Perl to allow dumping of
+DNS records from a MySQL database.
+
+FEATURES
+
+* backups and safe file creation
+* quiet mode, perfect for cron jobs
+* compatible with VegaDNS
+* can be integrated well into a tinydns Makefile (see contrib)
+* Free (BSD license)
+
+REQUIREMENTS
+
+* Perl 5.6.1
+* MySQL
+* djbdns (http://cr.yp.to/djbdns.html)
+* ucspi-tcp (http://cr.yp.to/ucspi-tcp.html)
+* daemontools (http://cr.yp.to/daemontools/install.html)
+
+INSTALL
+
+Make sure you have tinydns installed and running correctly.
+Create a new database called whatever you want and dump the file 'sql2data.sql'
+into. Make sure you have a user with enough privileges to use SELECT statements
+on that database.
+
+Create a new configuration file from the 'sql2data.conf.sample' file and adjust
+all settings.
+Execute sql2data, eventually specifying '-c' for the config file and most
+importantly '-b' for a first test-run.
+
+CONTRIB
+
+Contributed things (docs, scripts...) can be found inside directory contrib/ and
+are unsupported!
+
+LICENSE
+see LICENSE
+

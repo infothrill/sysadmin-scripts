@@ -1,0 +1,19 @@
+#
+# clears errors in readproctitle (daemontools)
+#
+
+cd /var/local/
+mkdir clearproctitle
+touch clearproctitle/down
+chmod +x clearproctitle/run
+chmod a-w clearproctitle/down
+ln -s /var/local/clearproctitle /service/clearproctitle
+
+#RUN ##################################################################
+#!/bin/sh
+echo "...............`date +%D@%H:%Mh`
+
+# When you want to clear the service errors, just run this:
+# svc -o /service/clearproctitle
+#RUN [EOF] ##################################################################
+

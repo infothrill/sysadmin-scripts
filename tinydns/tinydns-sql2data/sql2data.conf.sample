@@ -1,0 +1,9 @@
+Verbose = 1
+force = 1
+notifies = 1
+notify_except = myowndns.test.com
+sql_username = sql2data
+sql_password = yourpassword
+sql_tableprefix = ddns_
+dsn = dbi:mysql:dyndns
+root_dir = /etc/tinydns/root/

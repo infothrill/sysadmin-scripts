@@ -1,0 +1,33 @@
+
+NAME
+
+dumpmz2data - dump multiple zones (using AXFR) to tinydns data format
+
+SYNOPSIS
+
+   dumpmz2data [ -h ] [ -v ] [ @axfrserver ] [ filename... ]
+
+DESCRIPTION
+   dumpmz2data takes one or multiple zone-names as input and contacts an AXFR
+   server (usually a nameserver) and initiates zone-transfers. The
+   zone-date is dumped to STDOUT in the tinydns data file format.
+   The zone-names are read from the list of files given on the command
+   line, or from the standard input if - was specified. A
+   nameserver can be specified using @servername.
+
+OPTIONS
+
+   -h Display help.
+
+   -v Be more verbose.
+
+LICENSE
+   This program is distributed under the terms of the Perl
+   Artistic License.
+
+AUTHORS
+   Copyright (c) 2003 Paul Kremer.
+
+SEE ALSO
+   axfr, tcpclient 
+

@@ -1,0 +1,103 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>multilog-stamptail - Tail multilog logs from the point it left off last time</title>
+<link rev="made" href="mailto:root@b28.apple.com" />
+</head>
+
+<body style="background-color: white">
+
+<p><a name="__index__"></a></p>
+<!-- INDEX BEGIN -->
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#options">OPTIONS</a></li>
+	<li><a href="#examples">EXAMPLES</a></li>
+	<li><a href="#files">FILES</a></li>
+	<li><a href="#see_also">SEE ALSO</a></li>
+	<li><a href="#authors">AUTHORS</a></li>
+	<li><a href="#credits">CREDITS</a></li>
+	<li><a href="#copyright_and_license">COPYRIGHT AND LICENSE</a></li>
+</ul>
+<!-- INDEX END -->
+
+<hr />
+<p>
+</p>
+<h1><a name="name">NAME</a></h1>
+<p>multilog-stamptail - Tail multilog logs from the point it left off last time</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<p>multilog-stamptail [<strong>-hv</strong>] <em>stampfile</em> <em>mutlilogdirectory</em></p>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p><strong>multilog-stamptail</strong> parses the logs in a <code>multilog(1)</code> directory, picking up
+where the last invocation left off, and outputs them to standard output.</p>
+<p>
+</p>
+<hr />
+<h1><a name="options">OPTIONS</a></h1>
+<dl>
+<dt><strong><a name="item__2dh_2c__2d_2dhelp"><strong>-h</strong>, <strong>--help</strong></a></strong><br />
+</dt>
+<dd>
+Print out this documentation (which is done simply by feeding the script to
+<code>perldoc -t</code>).
+</dd>
+<p></p>
+<dt><strong><a name="item__2dv_2c__2d_2dversion"><strong>-v</strong>, <strong>--version</strong></a></strong><br />
+</dt>
+<dd>
+Print the version of <strong>multilog-stamptail</strong> and exit.
+</dd>
+<p></p></dl>
+<p>
+</p>
+<hr />
+<h1><a name="examples">EXAMPLES</a></h1>
+<pre>
+    multilog-stamptail /var/run/qmail.stamp /var/qmail/log/send/</pre>
+<p>
+</p>
+<hr />
+<h1><a name="files">FILES</a></h1>
+<p><strong>multilog-stamptail</strong> creates a file specified on the command line (<em>stampfile</em>),
+containing the timestamp of the last successful filter run.  It reads this file if its present and ignores any
+log messages before that time. You should ensure that this file is not deleted/changed by foreign processes.</p>
+<p>
+</p>
+<hr />
+<h1><a name="see_also">SEE ALSO</a></h1>
+<p>See <a href="http://cr.yp.to/daemontools.html">http://cr.yp.to/daemontools.html</a> for information on multilog and the
+rest of the daemontools package.</p>
+<p>The current version of this program is available from its web page at
+<a href="http://partisans.spurious.biz/~pkremer/projects/scripting/#perl">http://partisans.spurious.biz/~pkremer/projects/scripting/#perl</a>.</p>
+<p>
+</p>
+<hr />
+<h1><a name="authors">AUTHORS</a></h1>
+<p>Paul Kremer &lt;pkremer [at] spurious [dot] biz&gt;</p>
+<p>
+</p>
+<hr />
+<h1><a name="credits">CREDITS</a></h1>
+<p>Russ Allbery &lt;rra [at] stanford [dot] edu&gt; (original author of 'multilog-watch', which was the basis for this tool)</p>
+<p>
+</p>
+<hr />
+<h1><a name="copyright_and_license">COPYRIGHT AND LICENSE</a></h1>
+<p>Copyright 2003-2005, Paul Kremer.</p>
+<p>This program is free software; you may redistribute it and/or modify it
+under the same terms as Perl itself.</p>
+
+</body>
+
+</html>

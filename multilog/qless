@@ -1,0 +1,2 @@
+#!/bin/sh
+tai64nlocal < "${1}" | less

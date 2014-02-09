@@ -1,0 +1,199 @@
+#!/usr/bin/perl
+my $ID = q$Id: multilog-stamptail 268 2005-08-28 12:22:06Z pkremer $;
+#
+# multilog-stamptail -- Tail multilog logs from the point it left off last time
+#
+# Written by Paul Kremer <pkremer [at] spurious [dot] biz>
+# Heavily based upon 'multilog-watch', originally
+# written by Russ Allbery <rra@stanford.edu>
+# Copyright 2003-2004, Paul Kremer.
+#
+# This program is free software; you can redistribute it and/or modify it
+# under the same terms as Perl itself.
+
+##############################################################################
+# Site configuration
+##############################################################################
+
+use warnings;
+use strict;
+use Getopt::Long qw(GetOptions);
+use POSIX qw(strftime);
+
+##############################################################################
+# Time parsing
+##############################################################################
+
+# Converts a TAI64N timestamp to fractional seconds since epoch.  Returns
+# undef on any error.
+sub tai64n_decode {
+    my $timestamp = shift;
+    $timestamp =~ s/^\@// or return;
+
+    # Convenience for multilog files, so that one doesn't have to strip off
+    # just the timestamp before passing the file to this sub.
+    $timestamp =~ s/\.[us]$//;
+
+    # Reject invalid timestamps.
+    return unless $timestamp =~ /^[a-f0-9]{24}$/;
+
+    # We cheat and don't handle the full range of TAI.  Instead, pull off the
+    # initial 2^62 and the remainder will be seconds since epoch for more
+    # years than I care about.
+    my ($seconds, $nanoseconds) = ($timestamp =~ /^(.{16})(.{8})$/);
+    return unless defined ($seconds) && defined ($nanoseconds);
+    $seconds =~ s/^40+//;
+    my $time = hex ($seconds) + (hex ($nanoseconds) / 1e9);
+
+    # The TAI epoch is ten seconds later than the UTC epoch due to initial
+    # leap seconds, so adjust here.  This is the simple thing to do and works
+    # on systems that keep UTC in conjunction with multilog installations that
+    # have no leapseconds configuration.  In any more sophisticated TAI time
+    # installation, this will lose, but I don't have any such system and
+    # therefore haven't figured out the right thing to do.
+    $time -= 10;
+
+    return $time;
+}
+
+##############################################################################
+# Implementation
+##############################################################################
+
+# Clean up $0 for error reporting.
+my $fullpath = $0;
+$0 =~ s%^.*/%%;
+
+# Parse command-line options.
+my ($help, $version);
+Getopt::Long::config ('bundling', 'no_ignore_case');
+GetOptions ('help|h' => \$help, 'version|v' => \$version) or exit 1;
+if ($help) {
+    print "Feeding myself to perldoc, please wait....\n";
+    exec ('perldoc', '-t', $fullpath) or die "$0: can't fork: $!\n";
+} elsif ($version) {
+    my $version = join (' ', (split (' ', $ID))[1..3]);
+    $version =~ s/,v\b//;
+    $version =~ s/(\S+)$/($1)/;
+    print $version, "\n";
+    exit 0;
+}
+
+my $checkpoint = shift || die "$0: no stampfile specified\n";
+my $logdir = shift || die "$0: no logdir specified\n";
+
+# Grab the timestamp of the last time we looked at the logs, if available.
+my $lastcheck = 0;
+my $laststamp = '';
+if (open (CP, $checkpoint)) {
+    # Skip the first line; it's a comment.
+    <CP>;
+    $lastcheck = <CP>;
+    <CP>;
+    $laststamp = <CP>;
+    close CP;
+    chomp $lastcheck;
+    chomp $laststamp;
+    if ($lastcheck !~ /^\d+\.\d+$/) {
+        warn "$0: invalid timestamp in $checkpoint: $lastcheck\n";
+        $lastcheck = 0;
+    }
+}
+
+# Now, scan the directory looking for timestamp files.  Grab any that are old
+# log files and whose end date post-dates our last check time.  Always scan
+# current.
+opendir (LOGS, $logdir) or die "$0: cannot open $logdir: $!\n";
+my @files = grep { /^\@/ && tai64n_decode ($_) > $lastcheck } readdir LOGS;
+push (@files, 'current');
+closedir LOGS;
+
+# Now, process each file.  We spit our output to standard out.
+my ($checking, $timestamp) = (0, '');
+@ARGV = map { "$logdir/$_" } @files;
+LINE: while (<>) {
+    s/^(^\@[a-f0-9]+) // or next;
+    $timestamp = $1;
+    # if the timestamp is newer then lastcheck (also compare to laststamp due to inaccuracies)
+    if (!$checking && tai64n_decode ($timestamp) > $lastcheck && $timestamp ne $laststamp ) {
+        $checking = 1;
+    }
+    next LINE unless $checking;
+    print $timestamp, ' ', $_;
+}
+my $runlaststamp = $timestamp || '';
+if ($checking) {
+    open (CP, "> $checkpoint") or die "$0: cannot open $checkpoint: $!\n";
+    print CP "# Last check time generated automatically by multilog-stamptail.\n";
+    print CP tai64n_decode ($timestamp), "\n";
+    print CP "# Last tai64n stamp outputted by previous run, generated automatically by multilog-stamptail.\n";
+    print CP "$runlaststamp\n";
+    close CP or die "$0: cannot flush $checkpoint: $!\n";
+}
+
+##############################################################################
+# Documentation
+##############################################################################
+
+=head1 NAME
+
+multilog-stamptail - Tail multilog logs from the point it left off last time
+
+=head1 SYNOPSIS
+
+multilog-stamptail [B<-hv>] I<stampfile> I<mutlilogdirectory>
+
+=head1 DESCRIPTION
+
+B<multilog-stamptail> parses the logs in a multilog(1) directory, picking up
+where the last invocation left off, and outputs them to standard output.
+
+=head1 OPTIONS
+
+=over 4
+
+=item B<-h>, B<--help>
+
+Print out this documentation (which is done simply by feeding the script to
+C<perldoc -t>).
+
+=item B<-v>, B<--version>
+
+Print the version of B<multilog-stamptail> and exit.
+
+=back
+
+=head1 EXAMPLES
+
+    multilog-stamptail /var/run/qmail.stamp /var/qmail/log/send/
+
+=head1 FILES
+
+B<multilog-stamptail> creates a file specified on the command line (I<stampfile>),
+containing the timestamp of the last successful filter run.  It reads this file if its present and ignores any
+log messages before that time. You should ensure that this file is not deleted/changed by foreign processes.
+
+=head1 SEE ALSO
+
+See L<http://cr.yp.to/daemontools.html> for information on multilog and the
+rest of the daemontools package.
+
+The current version of this program is available from its web page at
+L<http://partisans.spurious.biz/~pkremer/projects/scripting/#perl>.
+
+=head1 AUTHORS
+
+Paul Kremer <pkremer [at] spurious [dot] biz>
+
+=head1 CREDITS
+
+Russ Allbery <rra [at] stanford [dot] edu> (original author of 'multilog-watch', which was the basis for this tool)
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright 2003-2005, Paul Kremer.
+
+This program is free software; you may redistribute it and/or modify it
+under the same terms as Perl itself.
+
+=cut

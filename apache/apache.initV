@@ -1,0 +1,82 @@
+#! /bin/bash
+#
+# apache init script for work with daemontools
+#
+
+PATH="/usr/local/bin:/bin:/usr/bin:/sbin:/usr/sbin"
+SVC="/usr/local/bin/svc"
+SVCNAME="apache2" # the name of the entry in /services/
+NAME="httpd"
+DAEMON="/usr/local/apache2/bin/httpd"
+SUEXEC="/usr/local/apache2/bin/suexec"
+PIDFILE="/var/local/apache/run/httpd.pid"
+CONF="/etc/apache2/httpd.conf"
+APACHECTL="/usr/local/apache2/bin/apachectl"
+
+trap "" 1
+export LANG=C
+
+test -f $SVC || exit 0
+test -f $DAEMON || exit 0
+test -f $APACHECTL || exit 0
+
+function isConfigGood() {
+	OUTPUT=`$APACHECTL configtest 2>&1`
+	if [ $? -ne 0 ]; then
+		echo -ne "Web server config error: $OUTPUT\n"
+		echo -ne "Web server $NAME was NOT restarted/reloaded/started.\n"
+		exit 1
+	fi
+}
+
+case "$1" in
+  start)
+    echo -ne "Starting web server: $NAME.\n"
+    $SVC -u /service/$SVCNAME
+    ;;
+
+  stop)
+    echo -ne "Stopping web server: $NAME.\n"
+    $SVC -d /service/$SVCNAME
+    if [ "$?x" != "0x" ]; then
+       echo -ne "Service down for $NAME down did not return exit code 0, killing...\n"
+       sleep 1
+       $SVC -t /service/$SVCNAME
+       sleep 1
+       killall $NAME
+       sleep 1
+       killall -9 $NAME
+    fi
+    ;;
+
+  reload)
+    isConfigGood
+    echo -ne "Sending HUP SIGNAL to $NAME.\n"
+    $SVC -h /service/$SVCNAME
+    ;;
+
+  restart)
+    isConfigGood
+    echo -ne "Restarting web server: $NAME.\n"
+    if [ -f $PIDFILE ]
+    then
+        $SVC -du /service/$SVCNAME
+    else
+        echo -ne "No PIDFILE ($PIDFILE), $NAME not restarted.\n"
+    fi
+    ;;
+  stat)
+    $APACHECTL -v
+    svstat /service/$SVCNAME
+    ;;
+  configtest)
+    $APACHECTL -t
+    ;;
+
+  *)
+    echo "Usage: /etc/init.d/$NAME {start|stop|reload|restart|stat|configtest}"
+    exit 1
+    ;;
+esac
+
+exit 0

@@ -1,0 +1,40 @@
+version 2.1
+-----------
+- added IPv6 support. (Logan Michels <logan at stfunoob dot com>)
+
+version 2.0
+-----------
+
+- INCOMPATIBLE CHANGES: the SQL table layout was more or less completely changed to match the one of VegaDNS (http://www.vegadns.org) so sql2data can be used together with vegadns.
+- added some docs and support files
+- SQL tables can have a prefix which is configurable
+- code formatting
+- POD (embedded man-page)
+- disabled sending of dns-notifies (will be re-added in later versions)
+
+initial release (1.14)
+----------------------
+- removed absolute tinydns paths (have to change cwd before execution...)
+- removed 'mail' from Domains (non-technical)
+- support for TTL in NSentry table
+- support for empty Host NSentry, makes +domain:IP:TTL a possibility
+                      (instead of only allowing +host.domain:IP:TTL)
+- support for MX records in NSentry table (MX Priority/Distance ->SQL field 'Other')
+- use File::Copy for portability and speed instead of "system('cp')"
+- slightly more paranoid backups
+- fix: do not use filenames starting with 'data', see tinydns-data manual
+- improved system('make') for speed (no subshell) and error-handling
+- command line options, help
+- added built-in dns notify support for slaves supporting axfr on notify (e.g. Bind)
+- ability to specify a dns-server to be excluded from notifies
+- new option: -f (force)
+- fix: escape \C for CNAMES corrected to plain 'C'
+- now checks if static_data was modified too (->recompile)
+- new: configuration file, no hardcoded mysql access stuff
+- added root_dir option
+- made the creation of new 'data' safe: atomic move (File::Copy)
+- wildcard domain can be specified by setting 'Other' to "*" for A records.
+  (the host itself is also added to data, in contrast to setting 'Host' to
+  something like '*.host')
+- new option for not executing 'make'
+- backup is now disabled by default, have to specify '-b'

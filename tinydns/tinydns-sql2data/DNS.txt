@@ -1,0 +1,22 @@
+This file documents some important things about DNS.
+It is not meant to be complete.
+
+Record types:
+
+RR       Meaning            Contents                                      RFC
+
+A        Host Address       32-bit IP address                             1035
+HINFO    CPU & OS           Name of CPU and Operating System              1035
+MX       Mail Exchanger     16-bit preference and name of host that acts  1035
+                            as mail exchanger for the domain
+NS       Name Server        Name of authoritative server for domain       1035
+PTR      Pointer            Pointer from IP address to domain name        1035
+SOA      Start of Authority Multiple fields that specify which parts of   1035
+                            the naming hierarchy a server implements
+TXT      Arbitrary Text     Uninterpreted string of ASCII text            1035
+LOC      Location                                                         1876
+KEY      Public Key                                                       2065
+SIG      Cryptographic signature                                          2065
+
+
+List of DNS related RFC's: http://www.dns.net/dnsrd/rfc/

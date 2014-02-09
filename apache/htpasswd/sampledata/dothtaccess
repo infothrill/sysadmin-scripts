@@ -1,0 +1,6 @@
+AuthType Basic
+AuthName infosens
+AuthUserFile htpasswd
+AuthGroupFile htgroup
+require user   infosens    pkremer   
+require group sysadmins webdesigners

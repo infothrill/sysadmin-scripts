@@ -1,0 +1,97 @@
+<HTML>
+<HEAD>
+<TITLE>mdns - Perform multiple DNS lookups in parallel</TITLE>
+<LINK REV="made" HREF="mailto:root@fisheye.uucp">
+</HEAD>
+
+<BODY>
+
+<A NAME="__index__"></A>
+<!-- INDEX BEGIN -->
+
+<UL>
+
+	<LI><A HREF="#name">NAME</A></LI>
+	<LI><A HREF="#synopsis">SYNOPSIS</A></LI>
+	<LI><A HREF="#description">DESCRIPTION</A></LI>
+	<LI><A HREF="#options">OPTIONS</A></LI>
+	<LI><A HREF="#license">LICENSE</A></LI>
+	<LI><A HREF="#authors">AUTHORS</A></LI>
+	<LI><A HREF="#see also">SEE ALSO</A></LI>
+</UL>
+<!-- INDEX END -->
+
+<HR>
+<P>
+<H1><A NAME="name">NAME</A></H1>
+<P>mdns - Perform multiple DNS lookups in parallel</P>
+<P>
+<HR>
+<H1><A NAME="synopsis">SYNOPSIS</A></H1>
+<P><STRONG>mdns</STRONG> [&nbsp;<STRONG>-d</STRONG>&nbsp;] [&nbsp;<STRONG>-h</STRONG>&nbsp;] [&nbsp;<STRONG>-m</STRONG>&nbsp;[&nbsp;<STRONG>-r</STRONG>&nbsp;]&nbsp;[&nbsp;<STRONG>-c</STRONG>&nbsp;<EM>prefix</EM>&nbsp;]&nbsp;] [&nbsp;<STRONG>-s</STRONG>&nbsp;] [&nbsp;<STRONG>-n</STRONG>&nbsp;<EM>number</EM>&nbsp;] [&nbsp;<STRONG>-t</STRONG>&nbsp;<EM>timeout</EM>&nbsp;]
+[&nbsp;@<EM>server</EM>&nbsp;] [&nbsp;<EM>filename</EM>...&nbsp;]</P>
+<P>
+<HR>
+<H1><A NAME="description">DESCRIPTION</A></H1>
+<P><STRONG>mdns</STRONG> performs multiple DNS lookups in parallel.  Names to query
+are read from the list of files given on the command line, or from the
+standard input if - was specified. A nameserver can be specified using
+@servername.</P>
+<P>
+<HR>
+<H1><A NAME="options">OPTIONS</A></H1>
+<DL>
+<DT><STRONG><A NAME="item_%2Dc"><STRONG>-c</STRONG></A></STRONG><BR>
+<DD>
+Display resolved hostnames AND MX hosts. May only be used in conjunction
+with the -m option. <EM>prefix</EM> will be prepended to found MX hosts.
+<P></P>
+<DT><STRONG><A NAME="item_%2Dd"><STRONG>-d</STRONG></A></STRONG><BR>
+<DD>
+Turn on debugging output.
+<P></P>
+<DT><STRONG><A NAME="item_%2Dh"><STRONG>-h</STRONG></A></STRONG><BR>
+<DD>
+Display help.
+<P></P>
+<DT><STRONG><A NAME="item_%2Dm"><STRONG>-m</STRONG></A></STRONG><BR>
+<DD>
+Perform MX lookups for hostnames found and output them. No hostnames will be displayed.
+<P></P>
+<DT><STRONG><A NAME="item_%2Dn_number"><STRONG>-n</STRONG> <EM>number</EM></A></STRONG><BR>
+<DD>
+Set the number of queries to have outstanding at any time (default 16).
+<P></P>
+<DT><STRONG><A NAME="item_%2Dr"><STRONG>-r</STRONG></A></STRONG><BR>
+<DD>
+When doing MX lookups (-m), go recursively through all domain components and check all MX records for these.
+<P></P>
+<DT><STRONG><A NAME="item_%2Ds"><STRONG>-s</STRONG></A></STRONG><BR>
+<DD>
+Output only the rdata string not the complete RR set.
+<P></P>
+<DT><STRONG><A NAME="item_%2Dt_timeout"><STRONG>-t</STRONG> <EM>timeout</EM></A></STRONG><BR>
+<DD>
+Set the timeout in seconds (default 15). If no replies are received for this
+amount of time, all outstanding queries will be flushed and new
+names will be read from the input stream.
+<P></P></DL>
+<P>
+<HR>
+<H1><A NAME="license">LICENSE</A></H1>
+<P>This program is distributed under the terms of the Perl Artistic License.</P>
+<P>
+<HR>
+<H1><A NAME="authors">AUTHORS</A></H1>
+<P>Original Copyright (c) 1997-2000 Michael Fuhr (included in the CPAN Net::DNS module as example application).
+Modified version Copyright 2002 by Paul Kremer (changes include parameter for
+STDIN, the help option, choosing between RR or rdata output, MX lookups, recursive domain component MX lookups, combined output and specifying a nameserver).</P>
+<P>
+<HR>
+<H1><A NAME="see also">SEE ALSO</A></H1>
+<P><EM>perl(1)</EM>, <EM>axfr</EM>, <EM>check_soa</EM>, <EM>check_zone</EM>, <EM>mx</EM>, <EM>perldig</EM>,
+<A HREF="/Net/DNS.html">the Net::DNS manpage</A></P>
+
+</BODY>
+
+</HTML>
