@@ -179,7 +179,7 @@ See L<http://cr.yp.to/daemontools.html> for information on multilog and the
 rest of the daemontools package.
 
 The current version of this program is available from its web page at
-L<http://partisans.spurious.biz/~pkremer/projects/scripting/#perl>.
+L<https://github.com/infothrill/sysadmin-scripts/tree/master/multilog>.
 
 =head1 AUTHORS
 
